@@ -1,4 +1,7 @@
-﻿namespace Insurance.Contracts.Application.Models
+﻿namespace Insurance.Api.Models
 {
-    public record ProductInsurance(int ProductId, float InsuranceValue);
+    public class ProductInsurance
+    {
+        public int ProductId { get; set; }
+    }
 }

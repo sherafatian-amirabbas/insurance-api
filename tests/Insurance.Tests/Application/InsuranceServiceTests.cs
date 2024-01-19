@@ -1,11 +1,11 @@
-﻿using Insurance.Api.Controllers;
-using Insurance.Application;
-using Insurance.Contracts.Application.Interfaces;
-using Insurance.Contracts.Plugins.Infrastructure;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Moq;
 using System.Threading.Tasks;
 using Xunit;
+using Insurance.Api.Models;
+using Insurance.Application;
+using Insurance.Contracts.Application.Interfaces;
+using Insurance.Contracts.Plugins.Infrastructure;
 
 namespace Insurance.Tests.Application
 {
@@ -35,25 +35,26 @@ namespace Insurance.Tests.Application
             // arrange
             const float expectedInsuranceValue = 0;
 
-            mockDataApiProxy.Setup(u => u.GetProductAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new Product()
+            mockDataApiProxy.Setup(u => u.GetProductCompleteAsync(It.IsAny<int>()))
+                .Returns(() => Task.FromResult(new ProductComplete(1)
                 {
-                    Id = 1,
-                    Name = productTypeName,
-                    SalesPrice = 1000,
-                    ProductTypeId = 1
-                }));
-
-            mockDataApiProxy.Setup(u => u.GetProductTypeAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new ProductType()
-                {
-                    Id = 1,
-                    Name = productTypeName,
-                    CanBeInsured = false
+                    Product = new Product()
+                    {
+                        Id = 1,
+                        Name = productTypeName,
+                        SalesPrice = 1000,
+                        ProductTypeId = 1
+                    },
+                    ProductType = new ProductType()
+                    {
+                        Id = 1,
+                        Name = productTypeName,
+                        CanBeInsured = false
+                    }
                 }));
 
             // act
-            var result = await insuranceService.CalculateInsuranceAsync(1);
+            var result = await insuranceService.CalculateProductInsuranceAsync(new ProductInsurance());
 
             // assert
             Assert.Equal(expectedInsuranceValue, result.InsuranceValue);
@@ -70,26 +71,27 @@ namespace Insurance.Tests.Application
             // arrange
             const float expectedInsuranceValue = 0;
 
-            mockDataApiProxy.Setup(u => u.GetProductAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new Product()
+            mockDataApiProxy.Setup(u => u.GetProductCompleteAsync(It.IsAny<int>()))
+                .Returns(() => Task.FromResult(new ProductComplete(1)
                 {
-                    Id = 1,
-                    Name = string.Empty,
-                    SalesPrice = 0,
-                    ProductTypeId = 1
-                }));
-
-            mockDataApiProxy.Setup(u => u.GetProductTypeAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new ProductType()
-                {
-                    Id = 1,
-                    Name = "Test",
-                    CanBeInsured = true
+                    Product = new Product()
+                    {
+                        Id = 1,
+                        Name = string.Empty,
+                        SalesPrice = 0,
+                        ProductTypeId = 1
+                    },
+                    ProductType = new ProductType()
+                    {
+                        Id = 1,
+                        Name = "Test",
+                        CanBeInsured = true
+                    }
                 }));
 
 
             // act
-            var result = await insuranceService.CalculateInsuranceAsync(1);
+            var result = await insuranceService.CalculateProductInsuranceAsync(new ProductInsurance());
 
             // assert
             Assert.Equal(expectedInsuranceValue, result.InsuranceValue);
@@ -101,25 +103,26 @@ namespace Insurance.Tests.Application
             // arrange
             const float expectedInsuranceValue = 500;
 
-            mockDataApiProxy.Setup(u => u.GetProductAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new Product()
+            mockDataApiProxy.Setup(u => u.GetProductCompleteAsync(It.IsAny<int>()))
+                .Returns(() => Task.FromResult(new ProductComplete(1)
                 {
-                    Id = 1,
-                    Name = string.Empty,
-                    SalesPrice = 0,
-                    ProductTypeId = 1
-                }));
-
-            mockDataApiProxy.Setup(u => u.GetProductTypeAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new ProductType()
-                {
-                    Id = 1,
-                    Name = "Laptops",
-                    CanBeInsured = true
+                    Product = new Product()
+                    {
+                        Id = 1,
+                        Name = string.Empty,
+                        SalesPrice = 0,
+                        ProductTypeId = 1
+                    },
+                    ProductType = new ProductType()
+                    {
+                        Id = 1,
+                        Name = "Laptops",
+                        CanBeInsured = true
+                    }
                 }));
 
             // act
-            var result = await insuranceService.CalculateInsuranceAsync(1);
+            var result = await insuranceService.CalculateProductInsuranceAsync(new ProductInsurance());
 
             // assert
             Assert.Equal(expectedInsuranceValue, result.InsuranceValue);
@@ -131,25 +134,26 @@ namespace Insurance.Tests.Application
             // arrange
             const float expectedInsuranceValue = 500;
 
-            mockDataApiProxy.Setup(u => u.GetProductAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new Product()
+            mockDataApiProxy.Setup(u => u.GetProductCompleteAsync(It.IsAny<int>()))
+                .Returns(() => Task.FromResult(new ProductComplete(1)
                 {
-                    Id = 1,
-                    Name = string.Empty,
-                    SalesPrice = 0,
-                    ProductTypeId = 1
-                }));
-
-            mockDataApiProxy.Setup(u => u.GetProductTypeAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new ProductType()
-                {
-                    Id = 1,
-                    Name = "Smartphones",
-                    CanBeInsured = true
+                    Product = new Product()
+                    {
+                        Id = 1,
+                        Name = string.Empty,
+                        SalesPrice = 0,
+                        ProductTypeId = 1
+                    },
+                    ProductType = new ProductType()
+                    {
+                        Id = 1,
+                        Name = "Smartphones",
+                        CanBeInsured = true
+                    }
                 }));
 
             // act
-            var result = await insuranceService.CalculateInsuranceAsync(1);
+            var result = await insuranceService.CalculateProductInsuranceAsync(new ProductInsurance());
 
             // assert
             Assert.Equal(expectedInsuranceValue, result.InsuranceValue);
@@ -166,25 +170,26 @@ namespace Insurance.Tests.Application
             // arrange
             const float expectedInsuranceValue = 1000;
 
-            mockDataApiProxy.Setup(u => u.GetProductAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new Product()
+            mockDataApiProxy.Setup(u => u.GetProductCompleteAsync(It.IsAny<int>()))
+                .Returns(() => Task.FromResult(new ProductComplete(1)
                 {
-                    Id = 1,
-                    Name = string.Empty,
-                    SalesPrice = 500,
-                    ProductTypeId = 1
-                }));
-
-            mockDataApiProxy.Setup(u => u.GetProductTypeAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new ProductType()
-                {
-                    Id = 1,
-                    Name = "Test",
-                    CanBeInsured = true
+                    Product = new Product()
+                    {
+                        Id = 1,
+                        Name = string.Empty,
+                        SalesPrice = 500,
+                        ProductTypeId = 1
+                    },
+                    ProductType = new ProductType()
+                    {
+                        Id = 1,
+                        Name = "Test",
+                        CanBeInsured = true
+                    }
                 }));
 
             // act
-            var result = await insuranceService.CalculateInsuranceAsync(1);
+            var result = await insuranceService.CalculateProductInsuranceAsync(new ProductInsurance());
 
             // assert
             Assert.Equal(expectedInsuranceValue, result.InsuranceValue);
@@ -196,25 +201,26 @@ namespace Insurance.Tests.Application
             // arrange
             const float expectedInsuranceValue = 1500;
 
-            mockDataApiProxy.Setup(u => u.GetProductAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new Product()
+            mockDataApiProxy.Setup(u => u.GetProductCompleteAsync(It.IsAny<int>()))
+                .Returns(() => Task.FromResult(new ProductComplete(1)
                 {
-                    Id = 1,
-                    Name = string.Empty,
-                    SalesPrice = 500,
-                    ProductTypeId = 1
-                }));
-
-            mockDataApiProxy.Setup(u => u.GetProductTypeAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new ProductType()
-                {
-                    Id = 1,
-                    Name = "Laptops",
-                    CanBeInsured = true
+                    Product = new Product()
+                    {
+                        Id = 1,
+                        Name = string.Empty,
+                        SalesPrice = 500,
+                        ProductTypeId = 1
+                    },
+                    ProductType = new ProductType()
+                    {
+                        Id = 1,
+                        Name = "Laptops",
+                        CanBeInsured = true
+                    }
                 }));
 
             // act
-            var result = await insuranceService.CalculateInsuranceAsync(1);
+            var result = await insuranceService.CalculateProductInsuranceAsync(new ProductInsurance());
 
             // assert
             Assert.Equal(expectedInsuranceValue, result.InsuranceValue);
@@ -226,25 +232,26 @@ namespace Insurance.Tests.Application
             // arrange
             const float expectedInsuranceValue = 1500;
 
-            mockDataApiProxy.Setup(u => u.GetProductAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new Product()
+            mockDataApiProxy.Setup(u => u.GetProductCompleteAsync(It.IsAny<int>()))
+                .Returns(() => Task.FromResult(new ProductComplete(1)
                 {
-                    Id = 1,
-                    Name = string.Empty,
-                    SalesPrice = 500,
-                    ProductTypeId = 1
-                }));
-
-            mockDataApiProxy.Setup(u => u.GetProductTypeAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new ProductType()
-                {
-                    Id = 1,
-                    Name = "Smartphones",
-                    CanBeInsured = true
+                    Product = new Product()
+                    {
+                        Id = 1,
+                        Name = string.Empty,
+                        SalesPrice = 500,
+                        ProductTypeId = 1
+                    },
+                    ProductType = new ProductType()
+                    {
+                        Id = 1,
+                        Name = "Smartphones",
+                        CanBeInsured = true
+                    }
                 }));
 
             // act
-            var result = await insuranceService.CalculateInsuranceAsync(1);
+            var result = await insuranceService.CalculateProductInsuranceAsync(new ProductInsurance());
 
             // assert
             Assert.Equal(expectedInsuranceValue, result.InsuranceValue);
@@ -261,25 +268,26 @@ namespace Insurance.Tests.Application
             // arrange
             const float expectedInsuranceValue = 2000;
 
-            mockDataApiProxy.Setup(u => u.GetProductAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new Product()
+            mockDataApiProxy.Setup(u => u.GetProductCompleteAsync(It.IsAny<int>()))
+                .Returns(() => Task.FromResult(new ProductComplete(1)
                 {
-                    Id = 1,
-                    Name = string.Empty,
-                    SalesPrice = 2000,
-                    ProductTypeId = 1
-                }));
-
-            mockDataApiProxy.Setup(u => u.GetProductTypeAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new ProductType()
-                {
-                    Id = 1,
-                    Name = "Test",
-                    CanBeInsured = true
+                    Product = new Product()
+                    {
+                        Id = 1,
+                        Name = string.Empty,
+                        SalesPrice = 2000,
+                        ProductTypeId = 1
+                    },
+                    ProductType = new ProductType()
+                    {
+                        Id = 1,
+                        Name = "Test",
+                        CanBeInsured = true
+                    }
                 }));
 
             // act
-            var result = await insuranceService.CalculateInsuranceAsync(1);
+            var result = await insuranceService.CalculateProductInsuranceAsync(new ProductInsurance());
 
             // assert
             Assert.Equal(expectedInsuranceValue, result.InsuranceValue);
@@ -291,25 +299,26 @@ namespace Insurance.Tests.Application
             // arrange
             const float expectedInsuranceValue = 2500;
 
-            mockDataApiProxy.Setup(u => u.GetProductAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new Product()
+            mockDataApiProxy.Setup(u => u.GetProductCompleteAsync(It.IsAny<int>()))
+                .Returns(() => Task.FromResult(new ProductComplete(1)
                 {
-                    Id = 1,
-                    Name = string.Empty,
-                    SalesPrice = 2000,
-                    ProductTypeId = 1
-                }));
-
-            mockDataApiProxy.Setup(u => u.GetProductTypeAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new ProductType()
-                {
-                    Id = 1,
-                    Name = "Laptops",
-                    CanBeInsured = true
+                    Product = new Product()
+                    {
+                        Id = 1,
+                        Name = string.Empty,
+                        SalesPrice = 2000,
+                        ProductTypeId = 1
+                    },
+                    ProductType = new ProductType()
+                    {
+                        Id = 1,
+                        Name = "Laptops",
+                        CanBeInsured = true
+                    }
                 }));
 
             // act
-            var result = await insuranceService.CalculateInsuranceAsync(1);
+            var result = await insuranceService.CalculateProductInsuranceAsync(new ProductInsurance());
 
             // assert
             Assert.Equal(expectedInsuranceValue, result.InsuranceValue);
@@ -321,25 +330,26 @@ namespace Insurance.Tests.Application
             // arrange
             const float expectedInsuranceValue = 2500;
 
-            mockDataApiProxy.Setup(u => u.GetProductAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new Product()
+            mockDataApiProxy.Setup(u => u.GetProductCompleteAsync(It.IsAny<int>()))
+                .Returns(() => Task.FromResult(new ProductComplete(1)
                 {
-                    Id = 1,
-                    Name = string.Empty,
-                    SalesPrice = 2000,
-                    ProductTypeId = 1
-                }));
-
-            mockDataApiProxy.Setup(u => u.GetProductTypeAsync(It.IsAny<int>()))
-                .Returns(() => Task.FromResult(new ProductType()
-                {
-                    Id = 1,
-                    Name = "Smartphones",
-                    CanBeInsured = true
+                    Product = new Product()
+                    {
+                        Id = 1,
+                        Name = string.Empty,
+                        SalesPrice = 2000,
+                        ProductTypeId = 1
+                    },
+                    ProductType = new ProductType()
+                    {
+                        Id = 1,
+                        Name = "Smartphones",
+                        CanBeInsured = true
+                    }
                 }));
 
             // act
-            var result = await insuranceService.CalculateInsuranceAsync(1);
+            var result = await insuranceService.CalculateProductInsuranceAsync(new ProductInsurance());
 
             // assert
             Assert.Equal(expectedInsuranceValue, result.InsuranceValue);

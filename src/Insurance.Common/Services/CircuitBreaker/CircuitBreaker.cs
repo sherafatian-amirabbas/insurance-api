@@ -39,7 +39,7 @@
         }
 
 
-        public async Task<object?> ExecuteAsync()
+        public async Task<object?> ExecuteAsync(object? arg)
         {
             try
             {
@@ -50,7 +50,7 @@
                     throw new CircuitBreakerOpenException(msg);
                 }
 
-                return await action.ActAsync();
+                return await action.ActAsync(arg);
             }
             catch (Exception ex)
             {

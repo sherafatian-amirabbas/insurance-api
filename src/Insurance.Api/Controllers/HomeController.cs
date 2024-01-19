@@ -17,9 +17,16 @@ namespace Insurance.Api.Controllers
 
         [HttpPost]
         [Route("api/insurance/product")]
-        public async Task<ProductInsurance> CalculateInsurance([FromBody] CalculateInsuranceModel product)
+        public async Task<ProductInsuranceResult> CalculateProductInsurance([FromBody] ProductInsurance productInsurance)
         {
-            return await insuranceService.CalculateInsuranceAsync(product.ProductId);
+            return await insuranceService.CalculateProductInsuranceAsync(productInsurance);
+        }
+
+        [HttpPost]
+        [Route("api/insurance/order")]
+        public async Task<OrderInsuranceResult> CalculateOrderInsurance([FromBody] OrderInsurance orderInsurance)
+        {
+            return await insuranceService.CalculateOrderInsuranceAsync(orderInsurance);
         }
     }
 }

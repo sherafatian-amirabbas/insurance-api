@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Insurance.Api.Models;
 using Insurance.Contracts.Application.Exceptions;
 using Insurance.Contracts.Application.Interfaces;
 using Insurance.Contracts.Application.Models;
@@ -26,32 +27,84 @@ namespace Insurance.Application
         /// <summary>
         /// Calculates insurance
         /// </summary>
-        public async Task<ProductInsurance> CalculateInsuranceAsync(int productId)
+        public async Task<ProductInsuranceResult> CalculateProductInsuranceAsync(ProductInsurance productInsurance)
         {
-            var product = await dataApiProxy.GetProductAsync(productId);
-            if (product == null)
-                throw new BusinessException($"Product couldn't be found! ProductId: {productId}",
-                    HttpStatusCode.BadRequest);
+            var productComplete = await dataApiProxy.GetProductCompleteAsync(productInsurance.ProductId);
+            var result = CalculateInsurance(new List<ProductComplete>() { productComplete });
+            return result.FirstOrDefault()!;
+        }
 
-            var productType = await dataApiProxy.GetProductTypeAsync(product.ProductTypeId);
-            if (productType == null)
-                throw new TechnicalException($"ProductType couldn't be found! ProductTypeId: {product.ProductTypeId}");
+        public async Task<OrderInsuranceResult> CalculateOrderInsuranceAsync(OrderInsurance orderInsurance)
+        {
+            var productCompletes = await dataApiProxy.GetProductCompletesAsync(orderInsurance.ProductIds);
 
-            float insuranceValue = 0f;
-            if (productType.CanBeInsured)
+            var insuranceValues = CalculateInsurance(productCompletes);
+
+            var insuranceValue = insuranceValues.Sum(u => u.InsuranceValue);
+            var productIds = insuranceValues.Select(u => u.ProductId).ToList();
+            return new OrderInsuranceResult(productIds, insuranceValue);
+        }
+
+        #endregion
+
+
+        #region Private Methods
+
+        private void ValidateProducts(List<ProductComplete> products)
+        {
+            var invalidIds = products.Where(u => u.Product == null)
+                .Select(u => u.ProductId)
+                .ToList();
+            if (invalidIds.Any())
             {
-                if (product.SalesPrice >= 500)
-                    insuranceValue = product.SalesPrice < 2000 ? 1000 : 2000;
-
-                if (productType.Name == ProductType.LAPTOPS || productType.Name == ProductType.SMARTPHONES)
-                    insuranceValue += 500;
+                var productIds = string.Join(", ", invalidIds);
+                throw new BusinessException($"Product(s) couldn't be found! ProductId(s): {productIds}",
+                    HttpStatusCode.BadRequest);
             }
 
-            logger.LogInformation("CalculateInsurance - productId: {productId}, InsuranceValue: {InsuranceValue}",
-                productId,
-                insuranceValue);
+            var invalidTypeIds = products.Where(u => u.ProductType == null)
+                .Select(u => u.Product!.ProductTypeId)
+                .ToList();
+            if (invalidTypeIds.Any())
+            {
+                var productIds = string.Join(", ", invalidTypeIds);
+                throw new TechnicalException($"ProductType(s) couldn't be found! ProductTypeId(s): {productIds}");
+            }
+        }
 
-            return new ProductInsurance(productId, insuranceValue);
+        private List<ProductInsuranceResult> CalculateInsurance(List<ProductComplete> products)
+        {
+            ValidateProducts(products);
+
+            var result = products.Select(productComplete =>
+            {
+                float insuranceValue = 0f;
+                if (productComplete.ProductType!.CanBeInsured)
+                {
+                    if (productComplete.Product!.SalesPrice >= 500)
+                        insuranceValue = productComplete.Product!.SalesPrice < 2000 ? 1000 : 2000;
+
+                    if (productComplete.ProductType!.Name == ProductType.LAPTOPS ||
+                        productComplete.ProductType!.Name == ProductType.SMARTPHONES)
+                        insuranceValue += 500;
+                }
+
+                return new ProductInsuranceResult(productComplete.Product!.Id, insuranceValue);
+            })
+            .ToList();
+
+            LogProductInsuranceResult(result);
+
+            return result;
+        }
+
+        public void LogProductInsuranceResult(List<ProductInsuranceResult> result)
+        {
+            var infoItems = result
+                .Select(u => $"productId: {u.ProductId}, InsuranceValue: {u.InsuranceValue}")
+                .ToList();
+            var info = string.Join(" - ", infoItems);
+            logger.LogInformation("CalculateInsurance - {info}", info);
         }
 
         #endregion

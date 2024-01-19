@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Insurance.Common.Interfaces;
+using System.Net;
 
 namespace Insurance.Common.Services
 {
@@ -56,7 +57,7 @@ namespace Insurance.Common.Services
         private async Task<T?> DeserializeResponseAsync<T>(HttpResponseMessage? response)
             where T : class, new()
         {
-            if (response == null)
+            if (response == null || response.StatusCode != HttpStatusCode.OK)
                 return null;
 
             var content = await response.Content.ReadAsStringAsync();

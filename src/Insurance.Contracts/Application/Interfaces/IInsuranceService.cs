@@ -1,9 +1,11 @@
-﻿using Insurance.Contracts.Application.Models;
+﻿using Insurance.Api.Models;
+using Insurance.Contracts.Application.Models;
 
 namespace Insurance.Contracts.Application.Interfaces
 {
     public interface IInsuranceService
     {
-        Task<ProductInsurance> CalculateInsuranceAsync(int productId);
+        Task<ProductInsuranceResult> CalculateProductInsuranceAsync(ProductInsurance productInsurance);
+        Task<OrderInsuranceResult> CalculateOrderInsuranceAsync(OrderInsurance orderInsurance);
     }
 }

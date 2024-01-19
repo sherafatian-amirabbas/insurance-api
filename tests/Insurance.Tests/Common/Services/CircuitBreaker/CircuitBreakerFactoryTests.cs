@@ -24,7 +24,7 @@ namespace Insurance.Tests.Common.Services.CircuitBreaker
         {
             // arrange
             var id = Guid.NewGuid().ToString();
-            var action = new common.CircuitBreakerAction(id, async () => await Task.FromResult(new object()));
+            var action = new common.CircuitBreakerAction(id, async (object? arg) => await Task.FromResult(new object()));
             var expectedCBreaker = new common.CircuitBreaker(action);
             memoryCache.Set(id, expectedCBreaker);
 
@@ -40,7 +40,7 @@ namespace Insurance.Tests.Common.Services.CircuitBreaker
         {
             // arrange
             var id = Guid.NewGuid().ToString();
-            var action = new common.CircuitBreakerAction(id, async () => await Task.FromResult(new object()));
+            var action = new common.CircuitBreakerAction(id, async (object? arg) => await Task.FromResult(new object()));
 
             // act
             var expectedCBreaker = circuitBreakerFactory.Create(action);
