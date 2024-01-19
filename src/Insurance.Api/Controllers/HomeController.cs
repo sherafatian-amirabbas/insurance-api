@@ -1,49 +1,25 @@
-using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using Insurance.Api.Models;
+using Insurance.Contracts.Application.Interfaces;
+using Insurance.Contracts.Application.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Insurance.Api.Controllers
 {
     public class HomeController: Controller
     {
+        private readonly IInsuranceService insuranceService;
+
+        public HomeController(IInsuranceService insuranceService)
+        {
+            this.insuranceService = insuranceService;
+        }
+
         [HttpPost]
         [Route("api/insurance/product")]
-        public InsuranceDto CalculateInsurance([FromBody] InsuranceDto toInsure)
+        public async Task<ProductInsurance> CalculateInsurance([FromBody] CalculateInsuranceModel product)
         {
-            int productId = toInsure.ProductId;
-
-            BusinessRules.GetProductType(ProductApi, productId, ref toInsure);
-
-            if (!toInsure.ProductTypeHasInsurance)
-            {
-                toInsure.InsuranceValue = 0;
-                return toInsure;
-            }
-
-            BusinessRules.GetSalesPrice(ProductApi, productId, ref toInsure);
-
-            float insurance = 0f;
-            if (toInsure.SalesPrice >= 500)
-                insurance = toInsure.SalesPrice < 2000 ? 1000 : 2000;
-
-            if (toInsure.ProductTypeName == "Laptops" || toInsure.ProductTypeName == "Smartphones")
-                insurance += 500;
-
-            toInsure.InsuranceValue = insurance;
-            return toInsure;
+            return await insuranceService.CalculateInsuranceAsync(product.ProductId);
         }
-
-        public class InsuranceDto
-        {
-            public int ProductId { get; set; }
-            public float InsuranceValue { get; set; }
-            [JsonIgnore]
-            public string ProductTypeName { get; set; }
-            [JsonIgnore]
-            public bool ProductTypeHasInsurance { get; set; }
-            [JsonIgnore]
-            public float SalesPrice { get; set; }
-        }
-
-        private const string ProductApi = "http://localhost:5002";
     }
 }

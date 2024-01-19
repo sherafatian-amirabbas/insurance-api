@@ -1,15 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Insurance.Api.Middlewares;
+using Insurance.Application;
+using Insurance.Common;
+using Insurance.Common.Interfaces;
+using Insurance.Contracts.Application.Configuration;
+
 
 namespace Insurance.Api
 {
@@ -26,15 +27,16 @@ namespace Insurance.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            AddInsuranceApiServices(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, 
+            IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            LoggerFactory.Create(builder => builder.AddConsole()); // to log in the console
+            app.UseApplicationExceptionHandler(); // exception handling middleware to map the exceptions to response
 
             app.UseHttpsRedirection();
 
@@ -47,5 +49,36 @@ namespace Insurance.Api
                 endpoints.MapControllers();
             });
         }
+
+
+        #region Private Methods
+
+        /// <summary>
+        /// Registers Application Services
+        /// </summary>
+        private void AddInsuranceApiServices(IServiceCollection services)
+        {
+            AddSettings(services);
+
+            services.AddHttpClient<ApplicationHttpClient>((serviceProvider, httpClient) =>
+            {
+                var dataApiSetting = serviceProvider.GetRequiredService<IOptions<DataApiSetting>>().Value;
+                httpClient.BaseAddress = new Uri(dataApiSetting.BaseUrl);
+            });
+
+            services.AddScoped<IApplicationHttpRequest, ApplicationHttpRequest>();
+
+            services.AddApplicationServices();
+        }
+
+        /// <summary>
+        /// Registers Configurations
+        /// </summary>
+        private void AddSettings(IServiceCollection services)
+        {
+            services.Configure<DataApiSetting>(Configuration.GetSection("DataApi"));
+        }
+
+        #endregion
     }
 }
