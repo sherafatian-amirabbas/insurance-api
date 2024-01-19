@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Insurance.Common.Interfaces;
 using Insurance.Contracts.Application.Exceptions;
-
+using Insurance.Common.Services.CircuitBreaker;
 
 namespace Insurance.Api.Middlewares
 {
@@ -46,21 +46,46 @@ namespace Insurance.Api.Middlewares
 
 
                 httpContext.Response.Clear();
+
                 httpContext.Response.ContentType = CONTENT_TYPE_JSON;
-                httpContext.Response.StatusCode = (int)(ex is AppException ?
-                    (ex as AppException).StatusCode :
-                    HttpStatusCode.InternalServerError);
+                httpContext.Response.StatusCode = (int)GetStatusCode(ex);
+                var msg = GetMessage(ex);
 
                 var content = JsonConvert.SerializeObject(new
                 {
                     // only BusinessException messages are written to the response
-                    Message = ex is BusinessException ? ex.Message : "internal server error",
+                    Message = msg, //ex is BusinessException ? ex.Message : "internal server error",
                     RequestId = requestId
                 });
 
                 await httpContext.Response.WriteAsync(content);
             }
         }
+
+
+        #region Private Methods
+
+        private HttpStatusCode GetStatusCode(Exception ex)
+        {
+            return ex switch
+            {
+                AppException => (ex as AppException).StatusCode,
+                CircuitBreakerOpenException => HttpStatusCode.ServiceUnavailable,
+                _ => HttpStatusCode.InternalServerError
+            };
+        }
+
+        private string GetMessage(Exception ex)
+        {
+            return ex switch
+            {
+                BusinessException => (ex as BusinessException).Message,
+                CircuitBreakerOpenException => "Service is currently not available!",
+                _ => "internal server error"
+            };
+        }
+
+        #endregion
     }
 
     public static class ExceptionHandlerExtensions

@@ -12,7 +12,7 @@ namespace Insurance.Contracts.Application.Exceptions
         { }
 
         protected BusinessException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        : base(serializationInfo, streamingContext)
+            : base(serializationInfo, streamingContext)
         { }
     }
 }

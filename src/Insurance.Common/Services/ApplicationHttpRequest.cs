@@ -1,6 +1,6 @@
 ﻿using Insurance.Common.Interfaces;
 
-namespace Insurance.Common
+namespace Insurance.Common.Services
 {
     public class ApplicationHttpRequest : IApplicationHttpRequest
     {

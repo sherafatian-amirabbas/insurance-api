@@ -7,9 +7,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Insurance.Api.Middlewares;
 using Insurance.Application;
-using Insurance.Common;
 using Insurance.Common.Interfaces;
 using Insurance.Contracts.Application.Configuration;
+using Insurance.Common.Services;
+using Insurance.Common.Services.CircuitBreaker;
 
 
 namespace Insurance.Api
@@ -67,6 +68,8 @@ namespace Insurance.Api
             });
 
             services.AddScoped<IApplicationHttpRequest, ApplicationHttpRequest>();
+            services.AddSingleton<ICircuitBreakerFactory, CircuitBreakerFactory>();
+            services.AddMemoryCache();
 
             services.AddApplicationServices();
         }

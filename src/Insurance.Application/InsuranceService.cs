@@ -3,18 +3,21 @@ using Insurance.Contracts.Application.Exceptions;
 using Insurance.Contracts.Application.Interfaces;
 using Insurance.Contracts.Application.Models;
 using Insurance.Contracts.Plugins.Infrastructure;
-
+using Microsoft.Extensions.Logging;
 
 namespace Insurance.Application
 {
     public class InsuranceService : IInsuranceService
     {
         private readonly IDataApiProxy dataApiProxy;
+        private readonly ILogger<InsuranceService> logger;
 
 
-        public InsuranceService(IDataApiProxy dataApiProxy)
+        public InsuranceService(IDataApiProxy dataApiProxy,
+            ILogger<InsuranceService> logger)
         {
             this.dataApiProxy = dataApiProxy;
+            this.logger = logger;
         }
 
 
@@ -34,17 +37,21 @@ namespace Insurance.Application
             if (productType == null)
                 throw new TechnicalException($"ProductType couldn't be found! ProductTypeId: {product.ProductTypeId}");
 
-            float insurance = 0f;
+            float insuranceValue = 0f;
             if (productType.CanBeInsured)
             {
                 if (product.SalesPrice >= 500)
-                    insurance = product.SalesPrice < 2000 ? 1000 : 2000;
+                    insuranceValue = product.SalesPrice < 2000 ? 1000 : 2000;
 
                 if (productType.Name == ProductType.LAPTOPS || productType.Name == ProductType.SMARTPHONES)
-                    insurance += 500;
+                    insuranceValue += 500;
             }
 
-            return new ProductInsurance(productId, insurance);
+            logger.LogInformation("CalculateInsurance - productId: {productId}, InsuranceValue: {InsuranceValue}",
+                productId,
+                insuranceValue);
+
+            return new ProductInsurance(productId, insuranceValue);
         }
 
         #endregion

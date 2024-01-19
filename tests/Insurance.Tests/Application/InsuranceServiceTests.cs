@@ -2,11 +2,8 @@
 using Insurance.Application;
 using Insurance.Contracts.Application.Interfaces;
 using Insurance.Contracts.Plugins.Infrastructure;
+using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -15,13 +12,15 @@ namespace Insurance.Tests.Application
     public class InsuranceServiceTests
     {
         private readonly Mock<IDataApiProxy> mockDataApiProxy;
+        private readonly Mock<ILogger<InsuranceService>> mockLogger;
         private readonly InsuranceService insuranceService;
-
+        
 
         public InsuranceServiceTests()
         {
             mockDataApiProxy = new Mock<IDataApiProxy>();
-            insuranceService = new InsuranceService(mockDataApiProxy.Object);
+            mockLogger = new Mock<ILogger<InsuranceService>>();
+            insuranceService = new InsuranceService(mockDataApiProxy.Object, mockLogger.Object);
         }
 
 

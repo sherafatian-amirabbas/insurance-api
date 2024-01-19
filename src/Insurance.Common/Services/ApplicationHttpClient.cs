@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Insurance.Common.Interfaces;
 
-namespace Insurance.Common
+namespace Insurance.Common.Services
 {
     public class ApplicationHttpClient
     {
@@ -35,7 +35,7 @@ namespace Insurance.Common
             where TResponse : class, new()
         {
             var requestId = appHttpRequest.GetRequestId();
-            logger.LogInformation("httpRequest - RequestId: {RequestId}, Path: {Path}",
+            logger.LogDebug("httpRequest - RequestId: {RequestId}, Path: {Path}",
                 requestId,
                 path);
 
@@ -63,7 +63,7 @@ namespace Insurance.Common
 
             var requestId = appHttpRequest.GetRequestId();
             var path = response.RequestMessage?.RequestUri?.LocalPath;
-            logger.LogInformation("httpRequest - RequestId: {RequestId}, Path: {Path}, Response: {Response}",
+            logger.LogDebug("httpRequest - RequestId: {RequestId}, Path: {Path}, Response: {Response}",
             requestId,
                 path,
                 content);
