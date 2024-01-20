@@ -9,8 +9,10 @@ namespace Insurance.Application
         public static void AddApplicationServices(this IServiceCollection services)
         {
             services.AddInfrastructureServices();
+            services.AddDatabaseServices();
 
             services.AddScoped<IInsuranceService, InsuranceService>();
+            services.AddScoped<ISurchargeService, SurchargeService>();
         }
     }
 }

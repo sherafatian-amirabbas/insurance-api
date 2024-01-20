@@ -21,7 +21,13 @@ T3:
   
 T4:
   - A clarification, the amount '500' would be extra (regardless of 'canBeInsured' property set for the product type) to the insurance value:
-    Scenario 1) there is a product (of typw 'Digital cameras') with a price of '1000' and 'canBeInsured' is set to TRUE, then a amount of '1000' would be the insurance value itself and 500 is added to it => insurance value = 1500
+    Scenario 1) there is a product (of typw 'Digital cameras') with a price of '1000' and 'canBeInsured' is set to TRUE, then a amount of '1000' would be the insurance value itself and 500 is added to it => insurance value = 1500.
     Scenario 2) there is a product (of typw 'Digital cameras') with a price of '1000' and 'canBeInsured' is set to FALSE, then a amount of '0' would be the insurance value itself and 500 is added to it => insurance value = 500
   - Specflow updated to include items of type 'Digital cameras' in the order as well.
   - Swagger added.
+  
+T5:
+  - New endpoint defined accepting surcharge rates (in percentage).
+  - To store surcharges, in-memory EF core employed.
+  - Services adapted.
+  - unit tests for 'Surcharges' added. 
