@@ -8,13 +8,12 @@ using Newtonsoft.Json;
 using Insurance.Common.Interfaces;
 using Insurance.Contracts.Application.Exceptions;
 using Insurance.Common.Services.CircuitBreaker;
+using Insurance.Common.Constants;
 
 namespace Insurance.Api.Middlewares
 {
     public class ExceptionHandler
     {
-        public const string CONTENT_TYPE_JSON = "application/json";
-
         private readonly RequestDelegate next;
 
 
@@ -47,7 +46,7 @@ namespace Insurance.Api.Middlewares
 
                 httpContext.Response.Clear();
 
-                httpContext.Response.ContentType = CONTENT_TYPE_JSON;
+                httpContext.Response.ContentType = ContentTypes.CONTENT_TYPE_JSON;
                 httpContext.Response.StatusCode = (int)GetStatusCode(ex);
                 var msg = GetMessage(ex);
 

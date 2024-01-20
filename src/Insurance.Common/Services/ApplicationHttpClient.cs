@@ -31,8 +31,7 @@ namespace Insurance.Common.Services
         /// <summary>
         /// Sends a GET request
         /// </summary>
-        public async Task<TResponse?> GetAsync<TResponse>(string path,
-            HttpContent? content = null)
+        public async Task<TResponse?> GetAsync<TResponse>(string path)
             where TResponse : class, new()
         {
             var requestId = appHttpRequest.GetRequestId();
@@ -42,11 +41,8 @@ namespace Insurance.Common.Services
 
             var httpMessage = new HttpRequestMessage(HttpMethod.Get, path);
 
-            if (content != null)
-                httpMessage.Content = content;
-
             var response = await client.SendAsync(httpMessage);
-            return await DeserializeResponseAsync<TResponse>(response);
+            return await ParseResponse<TResponse>(response);
         }
 
         #endregion
@@ -54,14 +50,28 @@ namespace Insurance.Common.Services
 
         #region Private Methods
 
-        private async Task<T?> DeserializeResponseAsync<T>(HttpResponseMessage? response)
-            where T : class, new()
+        public async Task<TResponse?> ParseResponse<TResponse>(HttpResponseMessage? response)
+            where TResponse : class, new()
         {
-            if (response == null || response.StatusCode != HttpStatusCode.OK)
+            var requestId = appHttpRequest.GetRequestId();
+
+            if (response == null)
+                throw new Exception($"HttpRequest - internal error - RequestId: {requestId}");
+
+            var statusCode = (int)response.StatusCode;
+            if (response.IsSuccessStatusCode)
+                return await DeserializeResponseAsync<TResponse>(response);
+
+            if (statusCode >= 400 && statusCode < 500) // bad request e.g. not found
                 return null;
 
-            var content = await response.Content.ReadAsStringAsync();
+            throw new Exception($"HttpRequest - internal error - RequestId: {requestId}");
+        }
 
+        private async Task<TResponse?> DeserializeResponseAsync<TResponse>(HttpResponseMessage response)
+            where TResponse : class, new()
+        {
+            var content = await response.Content.ReadAsStringAsync();
             var requestId = appHttpRequest.GetRequestId();
             var path = response.RequestMessage?.RequestUri?.LocalPath;
             logger.LogDebug("httpRequest - RequestId: {RequestId}, Path: {Path}, Response: {Response}",
@@ -69,7 +79,7 @@ namespace Insurance.Common.Services
                 path,
                 content);
 
-            var instance = JsonConvert.DeserializeObject<T>(content);
+            var instance = JsonConvert.DeserializeObject<TResponse>(content);
             return instance;
         }
 

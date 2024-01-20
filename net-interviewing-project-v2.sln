@@ -11,13 +11,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Insurance.Tests", "tests\In
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{688513B6-F847-4834-8770-21037905B973}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Insurance.Application", "src\Insurance.Application\Insurance.Application.csproj", "{80033188-6B2F-4EF5-922C-0F733151FFBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Insurance.Application", "src\Insurance.Application\Insurance.Application.csproj", "{80033188-6B2F-4EF5-922C-0F733151FFBA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Insurance.Contracts", "src\Insurance.Contracts\Insurance.Contracts.csproj", "{7D516716-31C2-45DD-8D65-17C969368FE4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Insurance.Contracts", "src\Insurance.Contracts\Insurance.Contracts.csproj", "{7D516716-31C2-45DD-8D65-17C969368FE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Insurance.Infrastructure", "src\Insurance.Infrastructure\Insurance.Infrastructure.csproj", "{7AF5F48D-41A1-4B95-A191-07D7E31D3F23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Insurance.Infrastructure", "src\Insurance.Infrastructure\Insurance.Infrastructure.csproj", "{7AF5F48D-41A1-4B95-A191-07D7E31D3F23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Insurance.Common", "src\Insurance.Common\Insurance.Common.csproj", "{18D25590-A420-4B47-8449-06400D6B0924}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Insurance.Common", "src\Insurance.Common\Insurance.Common.csproj", "{18D25590-A420-4B47-8449-06400D6B0924}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Insurance.Specflow", "tests\Insurance.Specflow\Insurance.Specflow.csproj", "{4F457D1D-A1DE-4D91-AE80-CB154AB4BEF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,6 +103,18 @@ Global
 		{18D25590-A420-4B47-8449-06400D6B0924}.Release|x64.Build.0 = Release|Any CPU
 		{18D25590-A420-4B47-8449-06400D6B0924}.Release|x86.ActiveCfg = Release|Any CPU
 		{18D25590-A420-4B47-8449-06400D6B0924}.Release|x86.Build.0 = Release|Any CPU
+		{4F457D1D-A1DE-4D91-AE80-CB154AB4BEF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F457D1D-A1DE-4D91-AE80-CB154AB4BEF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F457D1D-A1DE-4D91-AE80-CB154AB4BEF3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4F457D1D-A1DE-4D91-AE80-CB154AB4BEF3}.Debug|x64.Build.0 = Debug|Any CPU
+		{4F457D1D-A1DE-4D91-AE80-CB154AB4BEF3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4F457D1D-A1DE-4D91-AE80-CB154AB4BEF3}.Debug|x86.Build.0 = Debug|Any CPU
+		{4F457D1D-A1DE-4D91-AE80-CB154AB4BEF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F457D1D-A1DE-4D91-AE80-CB154AB4BEF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F457D1D-A1DE-4D91-AE80-CB154AB4BEF3}.Release|x64.ActiveCfg = Release|Any CPU
+		{4F457D1D-A1DE-4D91-AE80-CB154AB4BEF3}.Release|x64.Build.0 = Release|Any CPU
+		{4F457D1D-A1DE-4D91-AE80-CB154AB4BEF3}.Release|x86.ActiveCfg = Release|Any CPU
+		{4F457D1D-A1DE-4D91-AE80-CB154AB4BEF3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -112,6 +126,7 @@ Global
 		{7D516716-31C2-45DD-8D65-17C969368FE4} = {10B83B43-B851-4B70-B2C3-1CF4E507235E}
 		{7AF5F48D-41A1-4B95-A191-07D7E31D3F23} = {10B83B43-B851-4B70-B2C3-1CF4E507235E}
 		{18D25590-A420-4B47-8449-06400D6B0924} = {10B83B43-B851-4B70-B2C3-1CF4E507235E}
+		{4F457D1D-A1DE-4D91-AE80-CB154AB4BEF3} = {688513B6-F847-4834-8770-21037905B973}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B586F8BA-4E42-475F-94E9-224CE02A909C}
