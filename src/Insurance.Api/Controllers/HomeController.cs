@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Insurance.Api.Models;
 using Insurance.Contracts.Application.Interfaces;
 using Insurance.Contracts.Application.Models;
 using Microsoft.AspNetCore.Mvc;

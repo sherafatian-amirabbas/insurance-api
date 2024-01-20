@@ -1,4 +1,4 @@
-﻿namespace Insurance.Api.Models
+﻿namespace Insurance.Contracts.Application.Models
 {
     public class ProductInsurance
     {

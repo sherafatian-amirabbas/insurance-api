@@ -1,5 +1,4 @@
-﻿using Insurance.Api.Models;
-using Insurance.Contracts.Application.Models;
+﻿using Insurance.Contracts.Application.Models;
 
 namespace Insurance.Contracts.Application.Interfaces
 {

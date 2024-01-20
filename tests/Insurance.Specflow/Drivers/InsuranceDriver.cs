@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Text;
 using Newtonsoft.Json;
-using Insurance.Api.Models;
 using Insurance.Common.Constants;
 using Insurance.Contracts.Application.Models;
 using Insurance.Specflow.Support;

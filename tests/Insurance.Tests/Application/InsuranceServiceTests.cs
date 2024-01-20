@@ -2,7 +2,7 @@
 using Moq;
 using System.Threading.Tasks;
 using Xunit;
-using Insurance.Api.Models;
+using Insurance.Contracts.Application.Models;
 using Insurance.Application;
 using Insurance.Contracts.Application.Interfaces;
 using Insurance.Contracts.Plugins.Infrastructure;

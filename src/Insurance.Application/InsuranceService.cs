@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using Insurance.Api.Models;
 using Insurance.Contracts.Application.Exceptions;
 using Insurance.Contracts.Application.Interfaces;
 using Insurance.Contracts.Application.Models;
