@@ -99,6 +99,16 @@ namespace Insurance.Specflow.Features
                         "OnePlus 8 Pro 128GB Black 5G",
                         "2000",
                         "3"});
+            table1.AddRow(new string[] {
+                        "4",
+                        "Sony CyberShot 1",
+                        "0",
+                        "4"});
+            table1.AddRow(new string[] {
+                        "5",
+                        "Sony CyberShot 2",
+                        "0",
+                        "4"});
 #line 4
  testRunner.Given("the following Products were available", ((string)(null)), table1, "Given ");
 #line hidden
@@ -118,7 +128,11 @@ namespace Insurance.Specflow.Features
                         "3",
                         "Smartphones",
                         "true"});
-#line 10
+            table2.AddRow(new string[] {
+                        "4",
+                        "Digital cameras",
+                        "true"});
+#line 12
  testRunner.And("the following ProductTypes were available", ((string)(null)), table2, "And ");
 #line hidden
         }
@@ -136,7 +150,7 @@ namespace Insurance.Specflow.Features
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Order Insurance Calculation", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 16
+#line 19
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -167,14 +181,18 @@ this.FeatureBackground();
                             "2"});
                 table3.AddRow(new string[] {
                             "3"});
-#line 17
+                table3.AddRow(new string[] {
+                            "4"});
+                table3.AddRow(new string[] {
+                            "5"});
+#line 20
  testRunner.Given("the following products were available in the order", ((string)(null)), table3, "Given ");
 #line hidden
-#line 22
+#line 27
  testRunner.When("insurance is calculated for the order", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 23
- testRunner.Then("the insurance value is 4000", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 28
+ testRunner.Then("the insurance value is 4500", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

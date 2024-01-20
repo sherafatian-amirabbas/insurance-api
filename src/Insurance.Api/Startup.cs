@@ -36,6 +36,10 @@ namespace Insurance.Api
         public void Configure(IApplicationBuilder app, 
             IWebHostEnvironment env)
         {
+            // swagger
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
             LoggerFactory.Create(builder => builder.AddConsole()); // to log in the console
             app.UseApplicationExceptionHandler(); // exception handling middleware to map the exceptions to response
 
@@ -59,6 +63,10 @@ namespace Insurance.Api
         /// </summary>
         private void AddInsuranceApiServices(IServiceCollection services)
         {
+            // swagger
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
+
             AddSettings(services);
 
             services.AddHttpClient<ApplicationHttpClient>((serviceProvider, httpClient) =>

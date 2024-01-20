@@ -29,18 +29,14 @@ namespace Insurance.Application
         public async Task<ProductInsuranceResult> CalculateProductInsuranceAsync(ProductInsurance productInsurance)
         {
             var productComplete = await dataApiProxy.GetProductCompleteAsync(productInsurance.ProductId);
-            var result = CalculateInsurance(new List<ProductComplete>() { productComplete });
-            return result.FirstOrDefault()!;
+            var (productIds, insuranceValue) = CalculateInsurance(new List<ProductComplete>() { productComplete });
+            return new ProductInsuranceResult(productIds.FirstOrDefault(), insuranceValue);
         }
 
         public async Task<OrderInsuranceResult> CalculateOrderInsuranceAsync(OrderInsurance orderInsurance)
         {
             var productCompletes = await dataApiProxy.GetProductCompletesAsync(orderInsurance.ProductIds);
-
-            var insuranceValues = CalculateInsurance(productCompletes);
-
-            var insuranceValue = insuranceValues.Sum(u => u.InsuranceValue);
-            var productIds = insuranceValues.Select(u => u.ProductId).ToList();
+            var (productIds, insuranceValue) = CalculateInsurance(productCompletes);
             return new OrderInsuranceResult(productIds, insuranceValue);
         }
 
@@ -71,7 +67,7 @@ namespace Insurance.Application
             }
         }
 
-        private List<ProductInsuranceResult> CalculateInsurance(List<ProductComplete> products)
+        private (List<int> productIds, float insuranceValue) CalculateInsurance(List<ProductComplete> products)
         {
             ValidateProducts(products);
 
@@ -88,22 +84,30 @@ namespace Insurance.Application
                         insuranceValue += 500;
                 }
 
-                return new ProductInsuranceResult(productComplete.Product!.Id, insuranceValue);
+                return new
+                {
+                    productComplete,
+                    insuranceValue
+                };
             })
             .ToList();
 
-            LogProductInsuranceResult(result);
+            var productIds = result.Select(u => u.productComplete.ProductId).ToList();
+            var insuranceValue = result.Sum(u => u.insuranceValue);
+            if (result.Any(u => u.productComplete.ProductType!.Name == ProductType.DIGITAL_CAMERAS))
+                insuranceValue += 500;
 
-            return result;
+            LogProductInsuranceResult(productIds, insuranceValue);
+
+            return (productIds, insuranceValue);
         }
 
-        public void LogProductInsuranceResult(List<ProductInsuranceResult> result)
+        public void LogProductInsuranceResult(List<int> productIds, float insuranceValue)
         {
-            var infoItems = result
-                .Select(u => $"productId: {u.ProductId}, InsuranceValue: {u.InsuranceValue}")
-                .ToList();
-            var info = string.Join(" - ", infoItems);
-            logger.LogInformation("CalculateInsurance - {info}", info);
+            var ids = string.Join(", ", productIds);
+            logger.LogInformation("CalculateInsurance - InsuranceValue: {InsuranceValue}, ProductId(s): {ProductIds}", 
+                ids,
+                insuranceValue);
         }
 
         #endregion
